@@ -3,10 +3,34 @@ using MyWebApp.Configurations;
 using MyWebApp.Repositories;
 using MyWebApp.Services;
 using MongoDB.Driver;
+using MyWebApp.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+
+// Lägger till HttpContextAccessor som behövs för LocalImageService
+builder.Services.AddHttpContextAccessor();
+
+// Kopplar AzureBlob-konfigurationen från appsettings till vår klass
+builder.Services.Configure<AzureBlobOptions>(
+    builder.Configuration.GetSection(AzureBlobOptions.SectionName));
+
+// Kolla om vi ska använda Azure Blob Storage via feature flag
+bool useAzureStorage = builder.Configuration.GetValue<bool>("FeatureFlags:UseAzureStorage");
+
+if (useAzureStorage)
+{
+    // Registrera Azure Blob Storage för produktion
+    builder.Services.AddSingleton<IImageService, AzureBlobImageService>();
+    Console.WriteLine("✅ Using Azure Blob Storage for images");
+}
+else
+{
+    // Registrera lokal bildhantering för utveckling
+    builder.Services.AddSingleton<IImageService, LocalImageService>();
+    Console.WriteLine("✅ Using local storage for images");
+}
 
 // Check if MongoDB should be used (default to false if not specified)
 bool useMongoDb = builder.Configuration.GetValue<bool>("FeatureFlags:UseMongoDb");
