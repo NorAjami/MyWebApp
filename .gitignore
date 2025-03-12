@@ -482,3 +482,16 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+
+# Ignorera systemfiler och cache
+.aspnet/
+.bash_history
+.bash_logout
+.bashrc
+.cache/
+.lesshst
+.profile
+.ssh/
+.sudo_as_admin_successful
+.wget-hsts
