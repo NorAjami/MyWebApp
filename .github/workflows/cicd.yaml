@@ -18,6 +18,9 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
+    - name: Kontrollera .NET-version
+      run: dotnet --version
+
     - name: Check out this repo
       uses: actions/checkout@v4
 
