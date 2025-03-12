@@ -21,6 +21,9 @@ jobs:
     - name: Check out this repo
       uses: actions/checkout@v4
 
+    - name: Rensa .NET-cache
+      run: dotnet nuget locals all --clear
+
     - name: Restore dependencies (NuGet)
       run: dotnet restore
 
